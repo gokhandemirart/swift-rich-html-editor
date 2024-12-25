@@ -25,6 +25,7 @@ public typealias PlatformColor = NSColor
 
 import OSLog
 import WebKit
+import SwiftUI
 
 /// An editor to edit HTML content.
 ///
@@ -119,7 +120,8 @@ public class RichHTMLEditorView: PlatformView {
 
     /// The object you use to react to editor's events.
     public weak var delegate: RichHTMLEditorViewDelegate?
-
+    public var editorView: Binding<Bool>?
+    
     /// The style of the text currently selected in the editor view.
     public private(set) var selectedTextAttributes = UITextAttributes()
 
@@ -203,6 +205,7 @@ public extension RichHTMLEditorView {
         webView.navigationDelegate = self
         addSubview(webView)
 
+        
         NSLayoutConstraint.activate([
             webView.topAnchor.constraint(equalTo: topAnchor),
             webView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -347,6 +350,8 @@ extension RichHTMLEditorView: ScriptMessageHandlerDelegate {
     }
 
     func caretPositionDidChange(_ caretRect: CGRect) {
+        
+        editorView?.wrappedValue = true
         delegate?.richHTMLEditorView(self, caretPositionDidChange: caretRect)
 
         #if canImport(UIKit)
