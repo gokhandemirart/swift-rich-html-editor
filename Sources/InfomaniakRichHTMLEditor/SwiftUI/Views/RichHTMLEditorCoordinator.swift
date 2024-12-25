@@ -21,6 +21,7 @@ public final class RichHTMLEditorCoordinator: RichHTMLEditorViewDelegate {
     }
 
     public func richHTMLEditorViewDidLoad(_ richHTMLEditorView: RichHTMLEditorView) {
+         _ = richHTMLEditorView.becomeFirstResponder()
         parent.onEditorLoaded?()
     }
 
