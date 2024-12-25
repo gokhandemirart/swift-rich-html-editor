@@ -233,8 +233,7 @@ public extension RichHTMLEditorView {
         }
 
         #if canImport(UIKit)
-       // webView.backgroundColor = .clear
-         webView.backgroundColor = .red
+        webView.backgroundColor = .red
         webView.isOpaque = false
         #endif
     }
