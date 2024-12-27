@@ -36,12 +36,14 @@ public struct RichHTMLEditor: PlateformViewRepresentable {
 
     @Binding public var html: String
     @Binding public var editorView: Bool
+    @Binding public var htmlPlainText: String
     @ObservedObject public var textAttributes: TextAttributes
 
-    public init(html: Binding<String>, textAttributes: TextAttributes, editorView : Binding<Bool>) {
+    public init(html: Binding<String>, textAttributes: TextAttributes, editorView : Binding<Bool>, htmlPlainText : Binding<String>) {
         _html = html
         _textAttributes = ObservedObject(wrappedValue: textAttributes)
         _editorView = editorView
+        _htmlPlainText = htmlPlainText
     }
 
     // MARK: - Platform functions
@@ -51,6 +53,7 @@ public struct RichHTMLEditor: PlateformViewRepresentable {
         richHTMLEditorView.delegate = context.coordinator
         richHTMLEditorView.html = html
         richHTMLEditorView.editorView = $editorView
+        richHTMLEditorView.htmlPlainText = $htmlPlainText
         
         if let css = editorCSS {
             richHTMLEditorView.injectAdditionalCSS(css)
