@@ -121,6 +121,7 @@ public class RichHTMLEditorView: PlatformView {
     /// The object you use to react to editor's events.
     public weak var delegate: RichHTMLEditorViewDelegate?
     public var editorView: Binding<Bool>?
+    public var htmlPlainText: Binding<String>?
     
     /// The style of the text currently selected in the editor view.
     public private(set) var selectedTextAttributes = UITextAttributes()
@@ -216,9 +217,15 @@ public extension RichHTMLEditorView {
         configureWebView()
         enableWebViewDebug()
 
+        // Scroll indicator özelleştirmeleri
         #if canImport(UIKit)
-        setScrollableBehavior(false)
+        setScrollableBehavior(false) // Özel kaydırma davranışı
+        webView.scrollView.indicatorStyle = .default // Kaydırma çubuğunu beyaz yap
+        webView.scrollView.tintColor = UIColor(red: 165/255, green: 165/255, blue: 165/255, alpha: 1.0) // Kaydırma çubuğu mavi olacak
+        webView.scrollView.scrollIndicatorInsets = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 5) // Çubuk konumunu ayarla
         #endif
+        
+        
 
         loadWebViewPage()
         loadScripts()
@@ -250,6 +257,20 @@ public extension RichHTMLEditorView {
             }
         }
     }
+    
+    func getPlainTextFromWebView(completion: @escaping (String?) -> Void) {
+        let script = "document.body.innerText || document.body.textContent;"
+        
+        webView.evaluateJavaScript(script) { (result, error) in
+            if let error = error {
+                print("JavaScript error: \(error.localizedDescription)")
+                completion(nil)
+            } else if let result = result as? String {
+                completion(result)
+            }
+        }
+    }
+    
 
     private func loadWebViewPage() {
         guard let indexURL = Bundle.module.url(forResource: "index", withExtension: "html") else {
@@ -313,7 +334,9 @@ extension RichHTMLEditorView: UIScrollViewDelegate {
     /// (when the caret is under the keyboard for example).
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard !isScrollEnabled else { return }
-        scrollView.contentOffset = .zero
+        if scrollView.contentOffset.x != 0 {
+            scrollView.contentOffset.x = 0
+        }
     }
 }
 #endif
@@ -327,6 +350,13 @@ extension RichHTMLEditorView: ScriptMessageHandlerDelegate {
     }
 
     func contentDidChange(_ text: String) {
+        getPlainTextFromWebView { plainText in
+            if let plainText = plainText {
+                self.htmlPlainText?.wrappedValue = plainText
+            } else {
+                print("Failed to retrieve plain text.")
+            }
+        }
         rawHTMLContent = text
         delegate?.richHTMLEditorViewDidChange(self)
     }
