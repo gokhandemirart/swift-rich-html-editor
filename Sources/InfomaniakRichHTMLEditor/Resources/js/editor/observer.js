@@ -3,9 +3,15 @@
 // MARK: - Observation methods
 
 function observeContentMutation(target, contentContainer) {
+    let debounceTimer;
+
     const mutationObserver = new MutationObserver(() => {
-        reportContentDidChange(contentContainer.innerHTML);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            reportContentDidChange(contentContainer.innerHTML);
+        }, 300); // 300ms bekleme süresi
     });
+
     mutationObserver.observe(target, { subtree: true, childList: true, characterData: true });
 }
 
