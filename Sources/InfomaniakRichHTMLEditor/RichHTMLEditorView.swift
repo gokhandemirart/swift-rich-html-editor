@@ -221,8 +221,8 @@ public extension RichHTMLEditorView {
         #if canImport(UIKit)
         setScrollableBehavior(false) // Özel kaydırma davranışı
         webView.scrollView.indicatorStyle = .default // Kaydırma çubuğunu beyaz yap
-        webView.scrollView.tintColor = UIColor(red: 165/255, green: 165/255, blue: 165/255, alpha: 1.0) // Kaydırma çubuğu mavi olacak
-        webView.scrollView.scrollIndicatorInsets = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 5) // Çubuk konumunu ayarla
+        webView.scrollView.tintColor = UIColor(red: 60/255, green: 60/255, blue: 60/255, alpha: 0.25)// Kaydırma çubuğu mavi olacak
+        webView.scrollView.scrollIndicatorInsets = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: -5) // Çubuk konumunu ayarla
         #endif
         
         
