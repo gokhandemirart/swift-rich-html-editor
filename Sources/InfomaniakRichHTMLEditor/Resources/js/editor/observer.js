@@ -9,7 +9,7 @@ function observeContentMutation(target, contentContainer) {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             reportContentDidChange(contentContainer.innerHTML);
-        }, 300); // 300ms bekleme süresi
+        }, 300); 
     });
 
     mutationObserver.observe(target, { subtree: true, childList: true, characterData: true });
