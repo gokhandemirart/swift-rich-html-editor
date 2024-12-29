@@ -34,6 +34,30 @@ function computeCaretRect() {
     return caretRect;
 }
 
+// MARK: - Handle Selection Changes (Deselect)
+
+function handleSelectionChange() {
+    const selection = window.getSelection();
+
+    // Eğer seçim yoksa, yani metinden vazgeçildiyse, işlemi gerçekleştirelim.
+    if (selection.isCollapsed) {
+        deselectText();
+    }
+}
+
+// Seçimi kaldırma (deselect) fonksiyonu
+function deselectText() {
+    // Burada, seçim sıfırlanabilir ve UI üzerinde başka bir şeyler yapılabilir
+    console.log("Seçim kaldırıldı!");
+
+    // Seçimi kaldırmak için seleksiyonu boşaltabiliriz
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+
+    // UI güncellemeleri yapabilirsiniz, örneğin:
+    // document.body.classList.remove('text-selected');
+}
+
 // MARK: - Utils
 
 const SelectionGrabber = {
@@ -111,3 +135,21 @@ function guessMostProbableMovingSelectionGrabber(selectionRange) {
         return (lastSelectionRange.endContainer !== selectionRange.endContainer) ? SelectionGrabber.end : SelectionGrabber.start;
     }
 }
+
+// MARK: - Listen for selection changes
+
+// Seçim değiştiğinde handleSelectionChange fonksiyonunu çalıştır
+document.addEventListener('selectionchange', handleSelectionChange);
+
+// MARK: - Listen for clicks outside of selection area
+
+// Bu fonksiyon, metnin dışına tıklandığında seçimden vazgeçilmesini sağlar.
+document.addEventListener('click', function(event) {
+    const selection = window.getSelection();
+    const selectedText = selection.toString();
+    
+    // Eğer seçili metin varsa, bunu algılarız. Eğer metin yoksa, seçimden vazgeçildiği kabul edilir.
+    if (!selectedText) {
+        deselectText();
+    }
+});
